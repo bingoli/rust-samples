@@ -1,2 +1,2 @@
 # rust-samples
-rust相关的例子
+rust语言开发的一些例子
