@@ -9,15 +9,15 @@ pub struct User {
 
 #[derive(Insertable, Clone)]
 #[table_name = "users"]
-pub struct NewUser<'a> {
-    pub name: &'a str,
-    pub email: &'a str,
+pub struct NewUser {
+    pub name: String,
+    pub email: String,
 }
 
 #[derive(Insertable, AsChangeset, Default, Debug)]
 #[table_name = "users"]
-pub struct UpdateUser<'a> {
+pub struct UpdateUser {
     pub id: i32,
-    pub name: &'a str,
-    pub email: &'a str,
+    pub name: String,
+    pub email: String,
 }

@@ -15,7 +15,7 @@ use std::time:: {
 
 #[macro_export]
 macro_rules! record_time_cost {
-    ($label:ident) => {
+    ($label:expr) => {
         let _time_recorder = $crate::TimeRecorder::new($label);
     };
 }
