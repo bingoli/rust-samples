@@ -8,8 +8,8 @@ use models::*;
 use schema::users::dsl::*;
 use schema::users;
 
-const REPEAT_TIME: i32 = 100;
-const BATCH_COUNT: i32 = 100;
+const REPEAT_TIME: i32 = 5;
+const BATCH_COUNT: i32 = 5;
 
 fn create_update_users(start_index: i32, count: i32, suffix: &str) -> Vec<UpdateUser> {
     let mut new_users = Vec::new();
@@ -92,6 +92,7 @@ fn update_transaction_test(connection: &SqliteConnection) {
     }
 }
 
+#[warn(dead_code)]
 fn test_info(connection : &SqliteConnection) {
 
     let count = users.count()
@@ -111,12 +112,94 @@ fn test_info(connection : &SqliteConnection) {
     }
 }
 
+fn create_all_update_users() -> Vec<Vec<UpdateUser>> {
+    let mut all_users = Vec::new();
+    for i in 0..REPEAT_TIME {
+        let start_index = i * BATCH_COUNT + 1;
+        let new_users = create_update_users(start_index, BATCH_COUNT, "update2");
+        let new_users = new_users
+            .into_iter()
+            .map(|mut item | {
+                if item.id % BATCH_COUNT >= BATCH_COUNT / 2 {
+                    item.id += BATCH_COUNT * REPEAT_TIME;
+                }
+                item
+            }).collect::<Vec<_>>();
+        all_users.push(new_users);
+    }
+    all_users
+}
+
+fn select_create_update_test_impl(connection: &SqliteConnection, new_users: Vec<UpdateUser>) {
+    let ids = new_users.iter().map(|item| item.id).collect::<Vec<_>>();
+    let exist_users = users.filter(id.eq_any(ids))
+        .load::<User>(connection).expect("load error");
+
+    let exist_ids = exist_users.iter().map(|item| item.id).collect::<Vec<_>>();
+
+    let (exist_users, not_exist_users) =
+        new_users
+            .into_iter()
+            .fold((vec![], vec![]), |mut all_items, item| {
+                if exist_ids.contains(&item.id) {
+                    all_items.0.push(item);
+                } else {
+                    all_items.1.push(item)
+                }
+                all_items
+            });
+
+    let _ = diesel::insert_into(users::table)
+        .values(&not_exist_users)
+        .execute(connection);
+
+    let _ = connection.transaction::<_, diesel::result::Error, _>(||{
+        for user in exist_users {
+            diesel::update(users::table.filter(id.eq(user.id)))
+                .set(user)
+                .execute(connection)?;
+        }
+        Ok(())
+    });
+}
+
+fn select_create_update_test(connection: &SqliteConnection) {
+    reset_data(connection);
+
+    let all_users = create_all_update_users();
+
+    record_time_cost!("select create upadte");
+
+    for new_users in all_users {
+        select_create_update_test_impl(connection, new_users);
+    }
+}
+
+fn new_replace_into_test(connection : &SqliteConnection) {
+
+    reset_data(connection);
+
+    let all_users = create_all_update_users();
+
+    record_time_cost!("replace into");
+
+    for new_users in all_users {
+        let _ = diesel::replace_into(users::table)
+        .values(&new_users)
+        .execute(connection);
+    }
+
+}
+
 fn main() {
     let connection = establish_connection();
     
     replace_into_test(&connection);
     update_test(&connection);
     update_transaction_test(&connection);
+
+    new_replace_into_test(&connection);
+    select_create_update_test(&connection);
 
     test_info(&connection);
 }
