@@ -4,3 +4,4 @@ Cargo.lock
 .env
 demo.db
 .DS_Store
+.vscode
