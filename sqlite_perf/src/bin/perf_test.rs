@@ -8,8 +8,26 @@ use models::*;
 use schema::users::dsl::*;
 use schema::users;
 
-const REPEAT_TIME: i32 = 5;
-const BATCH_COUNT: i32 = 5;
+static mut REPEAT_COUNT: i32 = 5;
+static mut BATCH_COUNT: i32 = 5;
+
+fn get_repeat_count() -> i32 {
+    unsafe {
+        REPEAT_COUNT
+    }
+}
+
+fn get_batch_count() -> i32 {
+    unsafe {
+        BATCH_COUNT
+    }
+}
+
+fn get_all_data_count() -> i32 {
+    unsafe {
+        REPEAT_COUNT * BATCH_COUNT
+    }
+}
 
 fn create_update_users(start_index: i32, count: i32, suffix: &str) -> Vec<UpdateUser> {
     let mut new_users = Vec::new();
@@ -25,9 +43,9 @@ fn create_update_users(start_index: i32, count: i32, suffix: &str) -> Vec<Update
 
 fn create_all_users() -> Vec<Vec<UpdateUser>> {
     let mut all_users = Vec::new();
-    for i in 0..REPEAT_TIME {
-        let start_index = i * BATCH_COUNT + 1;
-        let new_users = create_update_users(start_index, BATCH_COUNT, "update1");
+    for i in 0..get_repeat_count() {
+        let start_index = i * get_batch_count() + 1;
+        let new_users = create_update_users(start_index, get_batch_count(), "update1");
         all_users.push(new_users);
     }
     all_users
@@ -35,7 +53,7 @@ fn create_all_users() -> Vec<Vec<UpdateUser>> {
 
 fn reset_data(connection : &SqliteConnection) {
     let _ = diesel::delete(users).execute(connection);
-    let count = REPEAT_TIME * BATCH_COUNT;
+    let count = get_all_data_count();
     let new_users = create_update_users(1, count, "");
     let _ = diesel::replace_into(users::table)
         .values(&new_users)
@@ -92,7 +110,7 @@ fn update_transaction_test(connection: &SqliteConnection) {
     }
 }
 
-#[warn(dead_code)]
+#[allow(dead_code)]
 fn test_info(connection : &SqliteConnection) {
 
     let count = users.count()
@@ -114,14 +132,14 @@ fn test_info(connection : &SqliteConnection) {
 
 fn create_all_update_users() -> Vec<Vec<UpdateUser>> {
     let mut all_users = Vec::new();
-    for i in 0..REPEAT_TIME {
-        let start_index = i * BATCH_COUNT + 1;
-        let new_users = create_update_users(start_index, BATCH_COUNT, "update2");
+    for i in 0..get_repeat_count() {
+        let start_index = i * get_batch_count() + 1;
+        let new_users = create_update_users(start_index, get_batch_count(), "update2");
         let new_users = new_users
             .into_iter()
             .map(|mut item | {
-                if item.id % BATCH_COUNT >= BATCH_COUNT / 2 {
-                    item.id += BATCH_COUNT * REPEAT_TIME;
+                if item.id % get_batch_count() >= get_batch_count() / 2 {
+                    item.id += get_all_data_count();
                 }
                 item
             }).collect::<Vec<_>>();
@@ -194,12 +212,24 @@ fn new_replace_into_test(connection : &SqliteConnection) {
 fn main() {
     let connection = establish_connection();
     
-    replace_into_test(&connection);
-    update_test(&connection);
-    update_transaction_test(&connection);
+    let test_cases = [(1, 1000), (2, 1000), (10, 1000), (100, 100)];
+    for (new_bacth_count, new_repeat_count) in &test_cases {
+        unsafe {
+            BATCH_COUNT = *new_bacth_count;
+            REPEAT_COUNT = *new_repeat_count;
+        }
 
-    new_replace_into_test(&connection);
-    select_create_update_test(&connection);
+        println!("------------------------------------");
+        println!("batch count: {}, repeat count: {}", new_bacth_count, new_repeat_count);
+        replace_into_test(&connection);
+        update_test(&connection);
+        update_transaction_test(&connection);
+    
+        new_replace_into_test(&connection);
+        select_create_update_test(&connection);
+        println!("------------------------------------");
+    }
 
-    test_info(&connection);
+
+    // test_info(&connection);
 }
