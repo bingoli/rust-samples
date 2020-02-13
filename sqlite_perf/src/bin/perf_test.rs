@@ -134,15 +134,12 @@ fn create_all_update_users() -> Vec<Vec<UpdateUser>> {
     let mut all_users = Vec::new();
     for i in 0..get_repeat_count() {
         let start_index = i * get_batch_count() + 1;
-        let new_users = create_update_users(start_index, get_batch_count(), "update2");
-        let new_users = new_users
-            .into_iter()
-            .map(|mut item | {
-                if item.id % get_batch_count() >= get_batch_count() / 2 {
-                    item.id += get_all_data_count();
-                }
-                item
-            }).collect::<Vec<_>>();
+        let mut new_users = create_update_users(start_index, get_batch_count(), "update2");
+        for new_user in new_users.iter_mut() {
+            if new_user.id % get_batch_count() >= get_batch_count() / 2 {
+                new_user.id += get_all_data_count();
+            }
+        }
         all_users.push(new_users);
     }
     all_users
@@ -224,7 +221,7 @@ fn main() {
         replace_into_test(&connection);
         update_test(&connection);
         update_transaction_test(&connection);
-    
+
         new_replace_into_test(&connection);
         select_create_update_test(&connection);
         println!("------------------------------------");
