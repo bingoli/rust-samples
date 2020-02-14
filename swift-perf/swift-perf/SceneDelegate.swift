@@ -2,7 +2,7 @@
 //  SceneDelegate.swift
 //  swift-perf
 //
-//  Created by 用户1 on 2020/2/14.
+//  Created by bingoli on 2020/2/14.
 //  Copyright © 2020 bingoli.cn. All rights reserved.
 //
 

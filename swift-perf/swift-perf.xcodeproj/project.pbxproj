@@ -15,6 +15,7 @@
 		7007831E23F6E2900098791C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7007831C23F6E2900098791C /* LaunchScreen.storyboard */; };
 		7007832923F6E2900098791C /* swift_perfTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7007832823F6E2900098791C /* swift_perfTests.swift */; };
 		7007833423F6E2900098791C /* swift_perfUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7007833323F6E2900098791C /* swift_perfUITests.swift */; };
+		7007834B23F6ED420098791C /* librustffifat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7007834A23F6ED420098791C /* librustffifat.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,9 @@
 		7007832F23F6E2900098791C /* swift-perfUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "swift-perfUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7007833323F6E2900098791C /* swift_perfUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = swift_perfUITests.swift; sourceTree = "<group>"; };
 		7007833523F6E2900098791C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7007834223F6EC310098791C /* swift-perf-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "swift-perf-Bridging-Header.h"; sourceTree = "<group>"; };
+		7007834323F6EC310098791C /* rustffi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rustffi.h; sourceTree = "<group>"; };
+		7007834A23F6ED420098791C /* librustffifat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librustffifat.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7007834B23F6ED420098791C /* librustffifat.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +84,7 @@
 		7007830523F6E28F0098791C = {
 			isa = PBXGroup;
 			children = (
+				7007834123F6EC010098791C /* rust-ffi */,
 				7007831023F6E28F0098791C /* swift-perf */,
 				7007832723F6E2900098791C /* swift-perfTests */,
 				7007833223F6E2900098791C /* swift-perfUITests */,
@@ -128,6 +134,16 @@
 			path = "swift-perfUITests";
 			sourceTree = "<group>";
 		};
+		7007834123F6EC010098791C /* rust-ffi */ = {
+			isa = PBXGroup;
+			children = (
+				7007834A23F6ED420098791C /* librustffifat.a */,
+				7007834323F6EC310098791C /* rustffi.h */,
+				7007834223F6EC310098791C /* swift-perf-Bridging-Header.h */,
+			);
+			path = "rust-ffi";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -135,6 +151,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7007833823F6E2900098791C /* Build configuration list for PBXNativeTarget "swift-perf" */;
 			buildPhases = (
+				7007834C23F6EE180098791C /* ShellScript */,
 				7007830A23F6E28F0098791C /* Sources */,
 				7007830B23F6E28F0098791C /* Frameworks */,
 				7007830C23F6E28F0098791C /* Resources */,
@@ -196,6 +213,7 @@
 				TargetAttributes = {
 					7007830D23F6E28F0098791C = {
 						CreatedOnToolsVersion = 11.3.1;
+						LastSwiftMigration = 1130;
 					};
 					7007832323F6E2900098791C = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -253,6 +271,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7007834C23F6EE180098791C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -e\n\nsh $PROJECT_DIR/build_rust.sh\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7007830A23F6E28F0098791C /* Sources */ = {
@@ -434,14 +472,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "swift-perf/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/rust-ffi",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.bingoli.swift-perf";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "rust-ffi/swift-perf-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -451,14 +496,20 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = "swift-perf/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/rust-ffi",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.bingoli.swift-perf";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "rust-ffi/swift-perf-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
