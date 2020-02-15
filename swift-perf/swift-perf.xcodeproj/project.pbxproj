@@ -16,6 +16,8 @@
 		7007832923F6E2900098791C /* swift_perfTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7007832823F6E2900098791C /* swift_perfTests.swift */; };
 		7007833423F6E2900098791C /* swift_perfUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7007833323F6E2900098791C /* swift_perfUITests.swift */; };
 		7007834B23F6ED420098791C /* librustffifat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7007834A23F6ED420098791C /* librustffifat.a */; };
+		701CBA6823F8015100794836 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 701CBA6723F8015100794836 /* StoreKit.framework */; };
+		701CBA7523F806CB00794836 /* libsqlite3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 701CBA7423F806CB00794836 /* libsqlite3.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +55,8 @@
 		7007834223F6EC310098791C /* swift-perf-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "swift-perf-Bridging-Header.h"; sourceTree = "<group>"; };
 		7007834323F6EC310098791C /* rustffi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rustffi.h; sourceTree = "<group>"; };
 		7007834A23F6ED420098791C /* librustffifat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = librustffifat.a; sourceTree = "<group>"; };
+		701CBA6723F8015100794836 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		701CBA7423F806CB00794836 /* libsqlite3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsqlite3.a; path = Frameworks/sqlite/libsqlite3.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +64,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				701CBA7523F806CB00794836 /* libsqlite3.a in Frameworks */,
 				7007834B23F6ED420098791C /* librustffifat.a in Frameworks */,
+				701CBA6823F8015100794836 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +95,7 @@
 				7007832723F6E2900098791C /* swift-perfTests */,
 				7007833223F6E2900098791C /* swift-perfUITests */,
 				7007830F23F6E28F0098791C /* Products */,
+				7007834D23F7F6410098791C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -142,6 +149,15 @@
 				7007834223F6EC310098791C /* swift-perf-Bridging-Header.h */,
 			);
 			path = "rust-ffi";
+			sourceTree = "<group>";
+		};
+		7007834D23F7F6410098791C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				701CBA7423F806CB00794836 /* libsqlite3.a */,
+				701CBA6723F8015100794836 /* StoreKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -474,6 +490,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
 				INFOPLIST_FILE = "swift-perf/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -482,6 +499,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/rust-ffi",
+					"$(PROJECT_DIR)/Frameworks/sqlite",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.bingoli.swift-perf";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -498,6 +516,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "";
 				INFOPLIST_FILE = "swift-perf/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -506,6 +525,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/rust-ffi",
+					"$(PROJECT_DIR)/Frameworks/sqlite",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "cn.bingoli.swift-perf";
 				PRODUCT_NAME = "$(TARGET_NAME)";

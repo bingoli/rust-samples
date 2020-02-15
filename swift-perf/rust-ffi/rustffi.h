@@ -4,3 +4,5 @@
 #include <stdlib.h>
 
 void hello_devworld(void);
+
+void run_sqlite_perf_test(void);
