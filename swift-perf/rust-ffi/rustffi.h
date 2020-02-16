@@ -5,4 +5,4 @@
 
 void hello_devworld(void);
 
-void run_sqlite_perf_test(void);
+void run_sqlite_perf_test(const char *database_url);

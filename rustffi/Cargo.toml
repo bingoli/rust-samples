@@ -11,4 +11,3 @@ crate-type = ["lib", "staticlib"]
 
 [dependencies]
 sqlite-perf = { path = "../sqlite_perf" }
-libsqlite3-sys = "0.9.1"

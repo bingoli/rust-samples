@@ -15,7 +15,10 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view.
         
         hello_devworld()
-        run_sqlite_perf_test()
+
+        let documentPaths = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)
+        let dbPath = documentPaths[0] + "/demo.db"
+        run_sqlite_perf_test(dbPath)
     }
 
 

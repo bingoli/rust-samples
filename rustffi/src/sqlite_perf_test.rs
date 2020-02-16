@@ -1,1 +1,0 @@
-use sqlite_perf::run_test;

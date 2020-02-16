@@ -8,17 +8,17 @@ use std::time:: {
     Instant
 };
 
-use dotenv::dotenv;
-use std::env;
+// use dotenv::dotenv;
+// use std::env;
 
 static mut REPEAT_COUNT: i32 = 5;
 static mut BATCH_COUNT: i32 = 5;
 
-pub fn establish_connection() -> SqliteConnection {
-    dotenv().ok();
+pub fn establish_connection(database_url: &str) -> SqliteConnection {
+    // dotenv().ok();
 
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    SqliteConnection::establish(&database_url)
+    // let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    SqliteConnection::establish(database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
@@ -245,8 +245,15 @@ fn new_replace_into_test(connection : &SqliteConnection) {
 
 }
 
-pub fn run_cases() {
-    let connection = establish_connection();
+pub fn run_cases(database_url: &str) {
+    let connection = establish_connection(database_url);
+
+    let sql = "CREATE TABLE IF NOT EXISTS users (
+        id INTEGER NOT NULL PRIMARY KEY,
+        name VARCHAR NOT NULL,
+        email TEXT NOT NULL
+      )";
+    connection.execute(sql).unwrap();
     
     let test_cases = [(1, 1000), (2, 1000), (10, 1000), (100, 100)];
     for (new_bacth_count, new_repeat_count) in &test_cases {

@@ -4,5 +4,10 @@ use rustffi::*;
 
 fn main() {
     hello_devworld();
-    run_sqlite_perf_test();
+
+    use std::ffi::CString;
+
+    let database_url = CString::new("demo.db").expect("CString::new failed");
+    let ptr = database_url.as_ptr();
+    run_sqlite_perf_test(ptr);    
 }
