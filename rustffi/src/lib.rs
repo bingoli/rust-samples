@@ -15,3 +15,8 @@ pub extern "C" fn run_sqlite_perf_test(database_url: *const c_char) {
     let database_url = database_url.to_str().unwrap();
     run_test(database_url);
 }
+
+#[no_mangle]
+pub extern "C" fn run_file_perf_test(database_url: *const c_char) {
+    use file_perf::run_test;
+}

@@ -10,3 +10,10 @@ edition = "2018"
 crate-type = ["lib", "staticlib"]
 
 [dependencies]
+lazy_static = "1.0.0"
+tokio="0.1.13"
+tokio-current-thread = "0.1"
+tokio-reactor = "0.1"
+tokio-io = "0.1"
+chrono = "0.4.10"
+
