@@ -11,5 +11,6 @@ crate-type = ["lib", "staticlib"]
 
 [dependencies]
 lazy_static = "1.0.0"
-tokio="0.1.13"
+tokio = { version = "0.2.23", features = ["full"] }
 chrono = "0.4.10"
+"
