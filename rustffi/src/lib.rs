@@ -1,4 +1,5 @@
 extern crate sqlite_perf;
+extern crate tokio_perf;
 
 use std::os::raw::c_char;
 use std::ffi::CStr;
@@ -17,6 +18,12 @@ pub extern "C" fn run_sqlite_perf_test(database_url: *const c_char) {
 }
 
 #[no_mangle]
-pub extern "C" fn run_file_perf_test(database_url: *const c_char) {
-    use file_perf::run_test;
+pub extern "C" fn run_file_perf_test(_database_url: *const c_char) {
+    // use file_perf::run_test;
+}
+
+#[no_mangle]
+pub extern "C" fn run_tokio_perf_test() {
+    use tokio_perf::perf_test::test_interval;
+    test_interval();
 }

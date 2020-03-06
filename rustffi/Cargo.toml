@@ -12,3 +12,4 @@ crate-type = ["lib", "staticlib"]
 [dependencies]
 sqlite-perf = { path = "../sqlite_perf" }
 file_perf = { path = "../file_perf" }
+tokio_perf = { path = "../tokio_perf" }
